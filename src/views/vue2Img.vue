@@ -1,9 +1,21 @@
 <template>
     <div>
-        <img src="https://sayweb.oss-cn-hangzhou.aliyuncs.com/homewebsite/close.png" alt="">
+        <authImg :imgUrl="logo" authToken="sdasdsadsadsadsa"></authImg>
     </div>
 </template>
 
 <script>
+import authImg from '../components/authImg.vue'
+import logo from '../assets/logo.png'
 
+export default {
+    components: {
+        authImg
+    },
+    data() {
+        return {
+            logo
+        }
+    }
+}
 </script>
