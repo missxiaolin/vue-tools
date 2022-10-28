@@ -12,14 +12,14 @@ const routes = [
   },
   {
     path: '/vue/img/token',
-    name: 'about',
+    name: 'imgToken',
     component: () => import('../views/vue2Img.vue')
   },
   {
     path: '/post',
-    name: 'about',
+    name: 'post',
     component: () => import('../views/post.vue')
-  }
+  },
 ]
 
 const router = new VueRouter({
