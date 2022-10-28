@@ -14,6 +14,11 @@ const routes = [
     path: '/vue/img/token',
     name: 'about',
     component: () => import('../views/vue2Img.vue')
+  },
+  {
+    path: '/post',
+    name: 'about',
+    component: () => import('../views/post.vue')
   }
 ]
 
