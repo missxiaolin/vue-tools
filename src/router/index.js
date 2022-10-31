@@ -20,6 +20,11 @@ const routes = [
     name: 'post',
     component: () => import('../views/post.vue')
   },
+  {
+    path: '/about',
+    name: 'about',
+    component: () => import('../views/about.vue')
+  }
 ]
 
 const router = new VueRouter({
