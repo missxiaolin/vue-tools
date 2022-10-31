@@ -26,8 +26,10 @@
 
 <script>
 // https://www.npmjs.com/package/mammoth
-const mammoth = require('mammoth');
-var markdown = require('markdown').markdown;
+// 注释先
+// const mammoth = require('mammoth');
+// var markdown = require('markdown').markdown;
+
 // import { post } from "../api/request";
 // let url = "/books/";
 
