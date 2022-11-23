@@ -11,6 +11,14 @@ const routes = [
     component: HomeView
   },
   {
+    path: '/shopping',
+    name: 'Shopping',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "shopping" */ '../views/Shopping.vue')
+  },
+  {
     path: '/vue/img/token',
     name: 'imgToken',
     component: () => import('../views/vue2Img.vue')
