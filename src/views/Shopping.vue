@@ -16,7 +16,7 @@
 import ProductList from '../components/shopping/ProductList.vue';
 import Cart from '../components/shopping/Cart.vue';
 export default {
-    name: 'Shopping',
+    name: "Shopping",
     components: { ProductList, Cart }
 };
 </script>
