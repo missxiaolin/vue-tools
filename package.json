@@ -10,19 +10,20 @@
   "dependencies": {
     "@micro-zoe/micro-app": "^0.8.8",
     "axios": "^0.27.2",
-    "core-js": "^3.8.3",
-    "vue": "^2.6.14",
-    "vue-router": "^3.5.1",
-    "mammoth": "^1.5.1",
-    "markdown": "^0.5.0",
-    "vuex": "^3.6.2",
     "axios-retry": "^3.2.5",
+    "core-js": "^3.8.3",
     "element-ui": "^2.15.9",
+    "fabric": "^5.3.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
+    "mammoth": "^1.5.1",
+    "markdown": "^0.5.0",
     "register-service-worker": "^1.7.1",
     "video.js": "^7.20.1",
-    "vue-i18n": "^8.27.2"
+    "vue": "^2.6.14",
+    "vue-i18n": "^8.27.2",
+    "vue-router": "^3.5.1",
+    "vuex": "^3.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
