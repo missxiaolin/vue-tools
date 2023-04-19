@@ -47,6 +47,11 @@ const routes = [
     path: '/show',
     name: 'show',
     component: () => import('../views/editorShow.vue')
+  },
+  {
+    path: '/rule',
+    name: 'rule',
+    component: () => import('../views/editorTest.vue')
   }
 ]
 
