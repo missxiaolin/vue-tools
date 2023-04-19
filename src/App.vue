@@ -1,11 +1,5 @@
 <template>
-  <div id="app" class="theme_red">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/shopping">购物车</router-link>|
-    </div>
-    <router-view />
-  </div>
+  <router-view />
 </template>
 
 <script>

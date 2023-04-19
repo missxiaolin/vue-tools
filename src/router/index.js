@@ -37,6 +37,11 @@ const routes = [
     path: '/btn',
     name: 'btn',
     component: () => import('../views/button.vue')
+  },
+  {
+    path: '/editor',
+    name: 'editor',
+    component: () => import('../views/editor.vue')
   }
 ]
 
