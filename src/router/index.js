@@ -52,6 +52,11 @@ const routes = [
     path: '/rule',
     name: 'rule',
     component: () => import('../views/editorTest.vue')
+  },
+  {
+    path: '/newEditor',
+    name: 'newEditor',
+    component: () => import('../views/editor/index.vue')
   }
 ]
 
