@@ -375,6 +375,24 @@ export default {
         transparentCorners: false,
       });
       editorCanvas.preserveObjectStacking = true;
+      // 插入图片测试
+      // fabric.Image.fromURL("https://cdn.enmonster.com/programImg/usercenter/user_img_default_bg.png", (img) => {
+      //   img.set({
+      //     angle: 63.51452936570968,
+      //     cacheHeight: 0,
+      //     cacheKey: "texture0",
+      //     cacheWidth: 0,
+      //     dirty: false,
+      //     fill: "rgb(0,0,0)",
+      //     height: 192,
+      //     isMoving: false,
+      //     left: 181.1113560407907,
+      //     stroke: null,
+      //     top: 95.26223949313021,
+      //     width: 192,
+      //   });
+      //   editorCanvas.add(img).renderAll();
+      // });
     },
 
     // 收起文本设置
@@ -393,7 +411,7 @@ export default {
       let reader = new FileReader();
       reader.onload = (e) => {
         let data = e.target.result;
-        fabric.Image.fromURL(data, (img) => {
+        fabric.Image.fromURL("https://cdn.enmonster.com/programImg/usercenter/user_img_default_bg.png", (img) => {
           editorCanvas.add(img).renderAll();
         });
       };
@@ -537,6 +555,8 @@ export default {
         //   'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F202004%2F15%2F20200415152122_cxBUS.thumb.1000_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1684561835&t=6920c2b2385a5ae82954c5f87c12af8b',
         //   obj.renderAll.bind(obj)
         // )
+
+        console.log(obj.getObjects())
       }
       this.templateData.bgColor = mbgColor;
     },
