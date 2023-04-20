@@ -525,10 +525,18 @@ export default {
       let mbgColor = value;
       const obj = editorCanvas;
       if (obj) {
+        // 设置背景颜色
         obj.set({
           backgroundColor: mbgColor,
         });
+        
         editorCanvas.renderAll();
+
+        // 设置背景图片
+        // obj.setBackgroundImage(
+        //   'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F202004%2F15%2F20200415152122_cxBUS.thumb.1000_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1684561835&t=6920c2b2385a5ae82954c5f87c12af8b',
+        //   obj.renderAll.bind(obj)
+        // )
       }
       this.templateData.bgColor = mbgColor;
     },
