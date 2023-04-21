@@ -1,184 +1,225 @@
 <template>
-    <el-container >
-      <el-header >
-        <el-menu
-          style="background: #6A60E3"
-          mode="horizontal"
+  <el-container>
+    <el-header>
+      <el-menu style="background: #6a60e3" mode="horizontal">
+        <div
+          style="
+            width: 400px;
+            float: left;
+            height: 70px;
+            color: #fff;
+            background: #5951b6;
+            line-height: 70px;
+          "
         >
-          <div style="width: 400px; float: left;height:70px;color: #fff; background: #5951B6;line-height: 70px">
-            <h1 style="text-align: center">{{ templatesTitle }}</h1>
-          </div>
-          <el-form inline="inline" style="float: right; width: 1000px" >
-            <el-button
-                class="el-icon-plus btn_style" style="width: 140px"
-                @click="addTextHandle('textbox', 'add')"
-            > 添加文本框
-            </el-button>
-            <el-button class="el-icon-plus btn_style" @click="imgDraw" >
-              <input type="file" accept="image/*"
-                  style="display:none"
-                  id="uploadfile"
-                  @change="uploadFile" />
-              上传图片
-            </el-button>
-            <el-button class="el-icon-edit btn_style"
-                @click="initD"
-            >   绘 制 </el-button>
-            <el-button
-              class="btn-delete btn_style el-icon-delete"
-              @click="deleteText"
-            > 删除控件
-            </el-button>
-          </el-form>
-        </el-menu>
-      </el-header>
-      <el-container>
-        <el-aside :width="isCollapsed ? '30px' : '300px'">
-          <div class="text-edit">
-            <div
-              @click="closeSetting"
-              class="title-setting"
-              :tipTitle="isCollapsed ? '展开设置' : '收起设置'"
-            >
-              <span class="text-setting">{{ title }}</span>
-              <i :class="isCollapsed ? 'el-icon-s-unfold' : 'el-icon-close'"/>
-            </div>
-            <el-form ref="form" >
-              <el-form-item label="文本内容：">
-                <div id="textBox"  style="width: 100% ">
-                  <el-input type="textarea"
-                      @input="changeText"
-                      @focus="changeText"
-                      id="in" ref="in"
-                      v-model="msg" ></el-input>
-                </div>
-              </el-form-item>
-              <el-form-item label="字体：" label-width="82px">
-                <el-select  v-model="fontFamilies.value"
-                    placeholder="请选择字体"
-                    @change="changeFontFamily">
-                  <el-option
-                    v-for="item in fontFamilies"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="字体颜色：" >
-                <el-select v-model="fontColor.value"
-                placeholder="请选择字体颜色"
-                    @change="changeFontColor"
-                >
-                  <el-option
-                    v-for="item in fontColor"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="字体粗细：" >
-                <el-select v-model="fontWeight.value"
-                placeholder="请选择字体粗细"
-                    @change="changefontWeight"
-                >
-                  <el-option
-                    v-for="item in fontWeight"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="字体风格：" >
-                <el-select v-model="fontStyle.value"
-                placeholder="请选择字体风格"
-                    @change="changeFontStyle">
-                  <el-option
-                    v-for="item in fontStyle"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="字体大小：" >
-                <el-select v-model="fontSizes.value"
-                placeholder="选择字体大小"
-                    @change="changeFontSize">
-                  <el-option
-                    v-for="item in fontSizes"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="对齐方式：" >
-                <el-select v-model="textAlign.value"
-                    @change="changeTextAlign"
-                    placeholder="选择对齐方式">
-                  <el-option
-                    v-for="item in textAlign"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="背景颜色：" >
-                <el-color-picker
-                  class="color-picker"
-                  v-model="bgcolor" circle
-                  size="small"
-                  show-alpha
-                  :predefine="predefineColors"
-                  @change="changeBgColor"
-                  color-format="hex"
-                ></el-color-picker>
-              </el-form-item>
-              <el-form-item>
-  <!--              <ul class="template-edit" id="template-edit" @click="chooseTemplate">
-                  <li><img src="@/assets/logo.png" alt="" id="bg1"  style="width: 100px;height: 50px" /></li>
-                  <li><img src="@/assets/logo.png" alt="" id="bg2"  style="width: 100px;height: 50px" /></li>
-                  <li><img src="@/assets/logo.png" alt="" id="bg3"  style="width: 100px;height: 50px" /></li>
-                </ul>-->
-              </el-form-item>
-            </el-form>
-          </div>
-        </el-aside>
-        <el-main style="height: 1040px" >
-          <div class="content-show">
-            <div class="canvas">
-            <canvas ref="canvas" id="editorCanvas"></canvas>
-          </div>
-          </div>
-          <el-form class="handleSave">
-            <el-button type="primary" class="btn-save" @click="downLoadImage1">预览图片</el-button>
-            <el-button type="primary" class="btn-download" @click="downLoad">下载图片</el-button>
-            <el-form-item inline="inline" class="btn-zoom" style="margin: 10px 0px">
-              <i class="el-icon-caret-left" @click="zoomIt(0.8)"></i>
-              <span> {{ zoomCounter }} % </span>
-              <i class="el-icon-caret-right" @click="zoomIt(1.2)"></i>
-            </el-form-item>
-            <el-button type="danger" class="btn-reset" @click="resetCanvas">重 置</el-button>
-          </el-form>
-        </el-main>
-        <el-aside :width="isCollapsed ? '30px' : '375px'">
+          <h1 style="text-align: center">{{ templatesTitle }}</h1>
+        </div>
+        <el-form inline="inline" style="float: right; width: 1000px">
+          <el-button
+            class="el-icon-plus btn_style"
+            style="width: 140px"
+            @click="addTextHandle('textbox', 'add')"
+          >
+            添加文本框
+          </el-button>
+          <el-button class="el-icon-plus btn_style" @click="imgDraw">
+            <input
+              type="file"
+              accept="image/*"
+              style="display: none"
+              id="uploadfile"
+              @change="uploadFile"
+            />
+            上传图片
+          </el-button>
+          <el-button class="el-icon-edit btn_style" @click="initD">
+            绘 制
+          </el-button>
+          <el-button
+            class="btn-delete btn_style el-icon-delete"
+            @click="deleteText"
+          >
+            删除控件
+          </el-button>
+        </el-form>
+      </el-menu>
+    </el-header>
+    <el-container>
+      <el-aside :width="isCollapsed ? '30px' : '300px'">
+        <div class="text-edit">
           <div
             @click="closeSetting"
             class="title-setting"
             :tipTitle="isCollapsed ? '展开设置' : '收起设置'"
           >
-            <span class="text-setting">{{ showTitle }}</span>
-            <i :class="isCollapsed ? 'el-icon-s-unfold' : 'el-icon-close'"/>
+            <span class="text-setting">{{ title }}</span>
+            <i :class="isCollapsed ? 'el-icon-s-unfold' : 'el-icon-close'" />
           </div>
-          <img :src="imageBase64" alt="">
-        </el-aside>
-      </el-container>
+          <el-form ref="form">
+            <el-form-item label="文本内容：">
+              <div id="textBox" style="width: 100%">
+                <el-input
+                  type="textarea"
+                  @input="changeText"
+                  @focus="changeText"
+                  id="in"
+                  ref="in"
+                  v-model="msg"
+                ></el-input>
+              </div>
+            </el-form-item>
+            <el-form-item label="字体：" label-width="82px">
+              <el-select
+                v-model="fontFamilies.value"
+                placeholder="请选择字体"
+                @change="changeFontFamily"
+              >
+                <el-option
+                  v-for="item in fontFamilies"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="字体颜色：">
+              <el-select
+                v-model="fontColor.value"
+                placeholder="请选择字体颜色"
+                @change="changeFontColor"
+              >
+                <el-option
+                  v-for="item in fontColor"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="字体粗细：">
+              <el-select
+                v-model="fontWeight.value"
+                placeholder="请选择字体粗细"
+                @change="changefontWeight"
+              >
+                <el-option
+                  v-for="item in fontWeight"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="字体风格：">
+              <el-select
+                v-model="fontStyle.value"
+                placeholder="请选择字体风格"
+                @change="changeFontStyle"
+              >
+                <el-option
+                  v-for="item in fontStyle"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="字体大小：">
+              <el-select
+                v-model="fontSizes.value"
+                placeholder="选择字体大小"
+                @change="changeFontSize"
+              >
+                <el-option
+                  v-for="item in fontSizes"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="对齐方式：">
+              <el-select
+                v-model="textAlign.value"
+                @change="changeTextAlign"
+                placeholder="选择对齐方式"
+              >
+                <el-option
+                  v-for="item in textAlign"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="背景颜色：">
+              <el-color-picker
+                class="color-picker"
+                v-model="bgcolor"
+                circle
+                size="small"
+                show-alpha
+                :predefine="predefineColors"
+                @change="changeBgColor"
+                color-format="hex"
+              ></el-color-picker>
+            </el-form-item>
+            <el-form-item>
+              <!--              <ul class="template-edit" id="template-edit" @click="chooseTemplate">
+                  <li><img src="@/assets/logo.png" alt="" id="bg1"  style="width: 100px;height: 50px" /></li>
+                  <li><img src="@/assets/logo.png" alt="" id="bg2"  style="width: 100px;height: 50px" /></li>
+                  <li><img src="@/assets/logo.png" alt="" id="bg3"  style="width: 100px;height: 50px" /></li>
+                </ul>-->
+            </el-form-item>
+          </el-form>
+        </div>
+      </el-aside>
+      <el-main style="height: 1040px">
+        <div class="content-show">
+          <div class="canvas">
+            <canvas ref="canvas" id="editorCanvas"></canvas>
+          </div>
+        </div>
+        <el-form class="handleSave">
+          <el-button type="primary" class="btn-save" @click="downLoadImage1"
+            >预览图片</el-button
+          >
+          <el-button type="primary" class="btn-download" @click="downLoad"
+            >下载图片</el-button
+          >
+          <el-form-item
+            inline="inline"
+            class="btn-zoom"
+            style="margin: 10px 0px"
+          >
+            <i class="el-icon-caret-left" @click="zoomIt(0.8)"></i>
+            <span> {{ zoomCounter }} % </span>
+            <i class="el-icon-caret-right" @click="zoomIt(1.2)"></i>
+          </el-form-item>
+          <el-button type="danger" class="btn-reset" @click="resetCanvas"
+            >重 置</el-button
+          >
+        </el-form>
+      </el-main>
+      <el-aside :width="isCollapsed ? '30px' : '375px'">
+        <div
+          @click="closeSetting"
+          class="title-setting"
+          :tipTitle="isCollapsed ? '展开设置' : '收起设置'"
+        >
+          <span class="text-setting">{{ showTitle }}</span>
+          <i :class="isCollapsed ? 'el-icon-s-unfold' : 'el-icon-close'" />
+        </div>
+        <img :src="imageBase64" alt="" />
+      </el-aside>
     </el-container>
-  </template>
+  </el-container>
+</template>
 
 <script>
 import {
@@ -305,7 +346,7 @@ export default {
       // 监听鼠标按下
       const obj = editorCanvas.getActiveObject();
       editorCanvas.on("mouse:down", (options) => {
-        console.log('ceshi', options)
+        console.log("ceshi", options);
         // 记录当前鼠标的起点坐标
         if (!obj) {
           this.mouseFrom.x = options.e.clientX - editorCanvas._offset.left;
@@ -411,9 +452,12 @@ export default {
       let reader = new FileReader();
       reader.onload = (e) => {
         let data = e.target.result;
-        fabric.Image.fromURL("https://cdn.enmonster.com/programImg/usercenter/user_img_default_bg.png", (img) => {
-          editorCanvas.add(img).renderAll();
-        });
+        fabric.Image.fromURL(
+          "https://cdn.enmonster.com/programImg/usercenter/user_img_default_bg.png",
+          (img) => {
+            editorCanvas.add(img).renderAll();
+          }
+        );
       };
       reader.readAsDataURL(file);
       e.target.value = "";
@@ -547,7 +591,7 @@ export default {
         obj.set({
           backgroundColor: mbgColor,
         });
-        
+
         editorCanvas.renderAll();
 
         // 设置背景图片
@@ -556,7 +600,7 @@ export default {
         //   obj.renderAll.bind(obj)
         // )
 
-        console.log(obj.getObjects())
+        console.log(obj.getObjects());
       }
       this.templateData.bgColor = mbgColor;
     },
