@@ -7,22 +7,20 @@
           <el-button class="el-icon-plus btn_style" @click="addTextHandle()">
             添加文本框
           </el-button>
-          <el-button class="el-icon-plus btn_style" @click="imgDraw">
-            <input
-              type="file"
-              accept="image/*"
-              style="display:none"
-              id="uploadfile"
-              @change="uploadFile"
-            />
-            上传图片
-          </el-button>
+          <uploadBtn
+            btnText="上传图片"
+            @imgSuccess="imgAddSuccess"
+          />
           <el-button
             class="btn-delete btn_style el-icon-delete"
             @click="deleteText"
           >
             删除控件
           </el-button>
+          <uploadBtn
+            btnText="组合logo"
+            @imgSuccess="imgAddCombinationSuccess"
+          />
           <el-button class="btn-delete btn_style" @click="bringToFront">
             置顶
           </el-button>
@@ -70,7 +68,10 @@
       </el-main>
       <!-- 右侧属性设置 -->
       <el-aside width="300px" v-if="selectType" class="right-box">
-        <i class="el-icon-circle-close icon-delete" @click="selectType = ''"></i>
+        <i
+          class="el-icon-circle-close icon-delete"
+          @click="selectType = ''"
+        ></i>
         <div class="text-edit">
           <el-form ref="form" v-if="selectType == 'text'">
             <el-form-item label="字体颜色：">
@@ -120,15 +121,18 @@
             </el-form-item>
           </el-form>
           <el-form ref="form" v-if="selectType == 'img'">
-            <el-button class="btn-delete btn_style" @click="imgReplaceDraw">
-              <input
-                type="file"
-                accept="image/*"
-                style="display:none"
-                id="uploadfileReplace"
-                @change="uploadReplaceFile"
-              />
-              更换图片
+            <uploadBtn
+              btnText="更换图片"
+              @imgSuccess="imgUpdateSuccess"
+            />
+          </el-form>
+          <el-form ref="form" v-if="selectType == 'imgGroup'">
+            <uploadBtn
+              btnText="更换图片"
+              @imgSuccess="imgUpdateGroupSuccess"
+            />
+            <el-button class="btn-delete btn_style" @click="exchangePosition">
+              调换位置
             </el-button>
           </el-form>
         </div>
@@ -155,10 +159,10 @@ import {
   backgroundColor,
   textAlign
 } from "./formData";
-import { renderingJson } from "./fabricToJson";
 
 import { fabric } from "fabric";
 let editorCanvas = "";
+import uploadBtn from "./uploadBtn.vue";
 
 fabric.Object.prototype.set({
   cornerStrokeColor: "#66b0ef",
@@ -172,8 +176,12 @@ fabric.Object.prototype.set({
 import img from "../../assets/rights.png";
 
 export default {
+  components: {
+    uploadBtn
+  },
   data() {
     return {
+      logo: 'https://cdn.enmonster.com/programImg/usercenter/user_img_default_bg.png',
       dialogVisible: false,
       url:
         "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
@@ -249,7 +257,7 @@ export default {
       let oldIndex = this.imgIndex;
       this.imgIndex = index;
       // 切换的时候需要保存之前的数据
-      let data = JSON.parse(JSON.stringify(editorCanvas.toJSON()));
+      let data = editorCanvas.toJSON();
       // console.log('拿到的json 数据', data)
       this.imagesList[oldIndex].jsonData = JSON.parse(JSON.stringify(data));
       this.initeditorCanvas();
@@ -284,9 +292,12 @@ export default {
         // dom 元素在创建后执行
         setTimeout(() => {
           editorCanvas.clear();
-          editorCanvas.loadFromJSON(jsonData, editorCanvas.renderAll.bind(editorCanvas));
+          editorCanvas.loadFromJSON(
+            jsonData,
+            editorCanvas.renderAll.bind(editorCanvas)
+          );
           editorCanvas.requestRenderAll();
-        }, 0)
+        }, 0);
       }
     },
 
@@ -298,7 +309,7 @@ export default {
         if (options.target) {
           options.target.evented = true;
           options.target.on("mousedown", e => {
-            // console.log('type', e.target)
+            // console.log("type", e);
             // console.log('type', e.target._element.localName)
             if (e && e.target.type == "i-text") {
               this.selectType = "text";
@@ -310,6 +321,10 @@ export default {
               e.target._element.localName == "img"
             ) {
               this.selectType = "img";
+              return;
+            }
+            if (e && e.target._objects.length > 1) {
+              this.selectType = "imgGroup";
               return;
             }
           });
@@ -339,45 +354,92 @@ export default {
       editorCanvas.add(textBox).setActiveObject(textBox);
     },
 
-    // 载入图片
-    imgDraw() {
-      document.getElementById("uploadfile").click();
-    },
-
-    // 上传图片
-    uploadFile(e) {
-      editorCanvas.isDrawingMode = false;
-      let file = e.target.files[0];
-      let reader = new FileReader();
-      reader.onload = e => {
-        let data = e.target.result;
-        fabric.Image.fromURL(data, img => {
-          editorCanvas.add(img).renderAll();
-        });
-      };
-      reader.readAsDataURL(file);
-      e.target.value = "";
+    // 顶部按钮上传图片成功
+    imgAddSuccess(data) {
+      fabric.Image.fromURL(data, img => {
+        editorCanvas.add(img).renderAll();
+      });
     },
 
     // 更换图片
     imgReplaceDraw() {
       document.getElementById("uploadfileReplace").click();
     },
+
     // 更换图片
-    uploadReplaceFile(e) {
-      // editorCanvas.isDrawingMode = false;
-      let file = e.target.files[0];
-      let reader = new FileReader();
+    imgUpdateSuccess(data) {
       const obj = editorCanvas.getActiveObject();
-      reader.onload = e => {
-        let data = e.target.result;
-        // 使用 setSrc 方法更改图片，第二个参数是回调函数，在回调函数里刷新一下 canvas 即可
-        obj.setSrc(data, () => {
-          editorCanvas.renderAll();
+      // 使用 setSrc 方法更改图片，第二个参数是回调函数，在回调函数里刷新一下 canvas 即可
+      obj.setSrc(data, () => {
+        editorCanvas.renderAll();
+      });
+    },
+
+    // 添加组合logo
+    imgAddCombinationSuccess(data) {
+      this.groupLogo(data, this.logo)
+    },
+
+    // 更换组合logo
+    imgUpdateGroupSuccess(data) {
+      const activeObject = editorCanvas.getActiveObject();
+      if (!activeObject) {
+        this.$alert('请先选中组合logo')
+        return
+      }
+      let scaleX = activeObject.scaleX || ''
+      let scaleY = activeObject.scaleY || ''
+      let top = activeObject.top;
+      let left = activeObject.left;
+      let items = activeObject._objects;
+      activeObject._restoreObjectsState();
+      editorCanvas.remove(activeObject);
+      let img1 = items[0]._element.currentSrc == this.logo ? items[0]._element.currentSrc : data
+      let img2 = items[1]._element.currentSrc == this.logo ? items[1]._element.currentSrc : data
+      this.groupLogo(img1, img2, left, top, scaleX, scaleY)
+    },
+
+    // 组合组件
+    groupLogo(oneImg, twoImg, left = '', top = '', scaleX = '', scaleY = '') {
+      //进行组合
+      fabric.Image.fromURL(oneImg, img1 => {
+        let aImg = img1;
+        aImg.left = 0;
+        aImg.top = 0;
+        fabric.Image.fromURL(twoImg, img2 => {
+          let bImg = img2;
+          // 用来做第一次高度添加
+          let oldHeight = img2._element.currentSrc == this.logo ? img2.height : img1.height
+          bImg.left = aImg.width;
+          bImg.top = 0;
+          let group = new fabric.Group([aImg, bImg], {
+            left: left || 0,
+            top: top || 0,
+            width: aImg.width + bImg.width,
+            height: oldHeight,
+            scaleX: scaleX || 1,
+            scaleY: scaleY || 1
+          });
+          editorCanvas.add(group);
         });
-      };
-      reader.readAsDataURL(file);
-      e.target.value = "";
+      });
+    },
+
+    // 更换位置
+    exchangePosition() {
+      const activeObject = editorCanvas.getActiveObject();
+      if (!activeObject) {
+        this.$alert('请先选中组合logo')
+        return
+      }
+      let scaleX = activeObject.scaleX || ''
+      let scaleY = activeObject.scaleY || ''
+      let top = activeObject.top;
+      let left = activeObject.left;
+      let items = activeObject._objects;
+      activeObject._restoreObjectsState();
+      editorCanvas.remove(activeObject);
+      this.groupLogo(items[1]._element.currentSrc, items[0]._element.currentSrc, left, top, scaleX, scaleY)
     },
 
     // 删除当前鼠标活动控件
