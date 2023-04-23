@@ -2,15 +2,12 @@
   <el-container>
     <!-- 头部 -->
     <el-header>
-      <el-menu style="margin-top: 20px;" mode="horizontal">
-        <el-form inline="inline" style="padding-bottom: 10px;">
+      <el-menu style="margin-top: 20px" mode="horizontal">
+        <el-form inline="inline" style="padding-bottom: 10px">
           <el-button class="el-icon-plus btn_style" @click="addTextHandle()">
             添加文本框
           </el-button>
-          <uploadBtn
-            btnText="上传图片"
-            @imgSuccess="imgAddSuccess"
-          />
+          <uploadBtn btnText="上传图片" @imgSuccess="imgAddSuccess" />
           <el-button
             class="btn-delete btn_style el-icon-delete"
             @click="deleteText"
@@ -121,16 +118,10 @@
             </el-form-item>
           </el-form>
           <el-form ref="form" v-if="selectType == 'img'">
-            <uploadBtn
-              btnText="更换图片"
-              @imgSuccess="imgUpdateSuccess"
-            />
+            <uploadBtn btnText="更换图片" @imgSuccess="imgUpdateSuccess" />
           </el-form>
           <el-form ref="form" v-if="selectType == 'imgGroup'">
-            <uploadBtn
-              btnText="更换图片"
-              @imgSuccess="imgUpdateGroupSuccess"
-            />
+            <uploadBtn btnText="更换图片" @imgSuccess="imgUpdateGroupSuccess" />
             <el-button class="btn-delete btn_style" @click="exchangePosition">
               调换位置
             </el-button>
@@ -157,7 +148,7 @@ import {
   fontStyle,
   fontWeight,
   backgroundColor,
-  textAlign
+  textAlign,
 } from "./formData";
 
 import { fabric } from "fabric";
@@ -171,20 +162,19 @@ fabric.Object.prototype.set({
   cornerSize: 8,
   borderScaleFactor: 2,
   transparentCorners: false,
-  borderColor: "#61abe8"
+  borderColor: "#61abe8",
 });
 import img from "../../assets/rights.png";
 
 export default {
   components: {
-    uploadBtn
+    uploadBtn,
   },
   data() {
     return {
-      logo: 'https://cdn.enmonster.com/programImg/usercenter/user_img_default_bg.png',
+      logo: "https://cdn.enmonster.com/programImg/usercenter/user_img_default_bg.png",
       dialogVisible: false,
-      url:
-        "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+      url: "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
       selectType: "",
       imgIndex: 0,
       imagesList: [
@@ -192,15 +182,15 @@ export default {
           backgroungImg: img,
           width: 1017,
           height: 450,
-          jsonData: []
+          jsonData: [],
         },
         {
           backgroungImg:
             "https://static.enmonster.com/arm-ms/2023/04/18/0cf588c962",
           width: 400,
           height: 450,
-          jsonData: []
-        }
+          jsonData: [],
+        },
       ],
       fontFamilies,
       fontSizes,
@@ -216,7 +206,7 @@ export default {
         "#FFF800",
         "#00FF0A",
         "#FD00FF",
-        "#0095FF"
+        "#0095FF",
       ],
       checked: true,
       // 模板图片保存数组
@@ -241,12 +231,12 @@ export default {
         fontStyle: "normal",
         fill: "#000000",
         textBackgroundColor: "rgba(0,0,0,0)",
-        selectable: true
+        selectable: true,
       },
       src: "",
       msg: "",
       canvas: null,
-      title: "文本设置"
+      title: "文本设置",
     };
   },
   mounted() {
@@ -279,7 +269,7 @@ export default {
         height: this.imagesList[this.imgIndex].height,
         originX: "center",
         originY: "center",
-        backgroundColor: "#ffffff"
+        backgroundColor: "#ffffff",
       });
 
       editorCanvas.preserveObjectStacking = true;
@@ -304,26 +294,28 @@ export default {
     // 初始化点击
     initD() {
       // 监听鼠标按下
-      const obj = editorCanvas.getActiveObject();
-      editorCanvas.on("mouse:down", options => {
+
+      editorCanvas.on("mouse:down", (options) => {
         if (options.target) {
           options.target.evented = true;
-          options.target.on("mousedown", e => {
-            // console.log("type", e);
-            // console.log('type', e.target._element.localName)
-            if (e && e.target.type == "i-text") {
+          options.target.on("mousedown", (e) => {
+            let type = "";
+            const obj = editorCanvas.getActiveObject();
+            if (obj) {
+              type = obj.type;
+            }
+            if (!type) {
+              return;
+            }
+            if (type == "i-text") {
               this.selectType = "text";
               return;
             }
-            if (
-              e &&
-              e.target._element &&
-              e.target._element.localName == "img"
-            ) {
+            if (type == "image") {
               this.selectType = "img";
               return;
             }
-            if (e && e.target._objects.length > 1) {
+            if (type == "group") {
               this.selectType = "imgGroup";
               return;
             }
@@ -356,7 +348,7 @@ export default {
 
     // 顶部按钮上传图片成功
     imgAddSuccess(data) {
-      fabric.Image.fromURL(data, img => {
+      fabric.Image.fromURL(data, (img) => {
         editorCanvas.add(img).renderAll();
       });
     },
@@ -377,39 +369,46 @@ export default {
 
     // 添加组合logo
     imgAddCombinationSuccess(data) {
-      this.groupLogo(data, this.logo)
+      this.groupLogo(data, this.logo);
     },
 
     // 更换组合logo
     imgUpdateGroupSuccess(data) {
       const activeObject = editorCanvas.getActiveObject();
       if (!activeObject) {
-        this.$alert('请先选中组合logo')
-        return
+        this.$alert("请先选中组合logo");
+        return;
       }
-      let scaleX = activeObject.scaleX || ''
-      let scaleY = activeObject.scaleY || ''
+      let scaleX = activeObject.scaleX || "";
+      let scaleY = activeObject.scaleY || "";
       let top = activeObject.top;
       let left = activeObject.left;
       let items = activeObject._objects;
       activeObject._restoreObjectsState();
       editorCanvas.remove(activeObject);
-      let img1 = items[0]._element.currentSrc == this.logo ? items[0]._element.currentSrc : data
-      let img2 = items[1]._element.currentSrc == this.logo ? items[1]._element.currentSrc : data
-      this.groupLogo(img1, img2, left, top, scaleX, scaleY)
+      let img1 =
+        items[0]._element.currentSrc == this.logo
+          ? items[0]._element.currentSrc
+          : data;
+      let img2 =
+        items[1]._element.currentSrc == this.logo
+          ? items[1]._element.currentSrc
+          : data;
+      this.groupLogo(img1, img2, left, top, scaleX, scaleY);
     },
 
     // 组合组件
-    groupLogo(oneImg, twoImg, left = '', top = '', scaleX = '', scaleY = '') {
+    groupLogo(oneImg, twoImg, left = "", top = "", scaleX = "", scaleY = "") {
       //进行组合
-      fabric.Image.fromURL(oneImg, img1 => {
+      fabric.Image.fromURL(oneImg, (img1) => {
         let aImg = img1;
         aImg.left = 0;
         aImg.top = 0;
-        fabric.Image.fromURL(twoImg, img2 => {
+        fabric.Image.fromURL(twoImg, (img2) => {
           let bImg = img2;
           // 用来做第一次高度添加
-          let oldHeight = img2._element.currentSrc == this.logo ? img2.height : img1.height
+          let oldHeight =
+            img2._element.currentSrc == this.logo ? img2.height : img1.height;
           bImg.left = aImg.width;
           bImg.top = 0;
           let group = new fabric.Group([aImg, bImg], {
@@ -418,7 +417,7 @@ export default {
             width: aImg.width + bImg.width,
             height: oldHeight,
             scaleX: scaleX || 1,
-            scaleY: scaleY || 1
+            scaleY: scaleY || 1,
           });
           editorCanvas.add(group);
         });
@@ -429,17 +428,24 @@ export default {
     exchangePosition() {
       const activeObject = editorCanvas.getActiveObject();
       if (!activeObject) {
-        this.$alert('请先选中组合logo')
-        return
+        this.$alert("请先选中组合logo");
+        return;
       }
-      let scaleX = activeObject.scaleX || ''
-      let scaleY = activeObject.scaleY || ''
+      let scaleX = activeObject.scaleX || "";
+      let scaleY = activeObject.scaleY || "";
       let top = activeObject.top;
       let left = activeObject.left;
       let items = activeObject._objects;
       activeObject._restoreObjectsState();
       editorCanvas.remove(activeObject);
-      this.groupLogo(items[1]._element.currentSrc, items[0]._element.currentSrc, left, top, scaleX, scaleY)
+      this.groupLogo(
+        items[1]._element.currentSrc,
+        items[0]._element.currentSrc,
+        left,
+        top,
+        scaleX,
+        scaleY
+      );
     },
 
     // 删除当前鼠标活动控件
@@ -458,7 +464,7 @@ export default {
       const obj = editorCanvas.getActiveObject();
       if (obj) {
         obj.set({
-          fill: mfontColor
+          fill: mfontColor,
         });
         editorCanvas.renderAll();
       }
@@ -480,7 +486,7 @@ export default {
       const obj = editorCanvas.getActiveObject();
       if (obj) {
         obj.set({
-          fontSize: mfontSize
+          fontSize: mfontSize,
         });
         editorCanvas.renderAll();
       }
@@ -489,7 +495,7 @@ export default {
     saveTemplates() {
       let base64URl = editorCanvas.toDataURL({
         formart: "jpg",
-        multiplier: 1
+        multiplier: 1,
       });
     },
 
@@ -497,7 +503,7 @@ export default {
     downLoadImage() {
       let base64URl = editorCanvas.toDataURL({
         formart: "png",
-        multiplier: 1
+        multiplier: 1,
       });
       this.imageBase64 = base64URl;
       this.dialogVisible = true;
@@ -545,7 +551,7 @@ export default {
         height: editorCanvas.height,
         left: 0,
         top: 0,
-        format: "png"
+        format: "png",
       });
       const link = document.createElement("a");
       link.download = "图片.png";
@@ -553,8 +559,8 @@ export default {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-    }
-  }
+    },
+  },
 };
 </script>
 
