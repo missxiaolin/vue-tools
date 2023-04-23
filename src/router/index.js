@@ -57,6 +57,11 @@ const routes = [
     path: '/newEditor',
     name: 'newEditor',
     component: () => import('../views/editor/index.vue')
+  },
+  {
+    path: '/tailoring',
+    name: 'tailoring',
+    component: () => import('../views/tailoring.vue')
   }
 ]
 
