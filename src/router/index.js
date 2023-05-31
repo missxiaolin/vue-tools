@@ -62,6 +62,11 @@ const routes = [
     path: '/tailoring',
     name: 'tailoring',
     component: () => import('../views/tailoring.vue')
+  },
+  {
+    path: '/ceshi',
+    name: 'ceshi',
+    component: () => import('../views/ceshi1.vue')
   }
 ]
 
