@@ -6,29 +6,33 @@
         style="border-bottom: 1px solid #ccc"
         :editor="editor"
         :defaultConfig="toolbarConfig"
+        mode="highest"
       />
       <!-- 编辑器 -->
       <Editor
+        ref="editor"
         style="height: 400px; overflow-y: hidden"
         :defaultConfig="editorConfig"
         v-model="html"
         @onChange="onChange"
         @onCreated="onCreated"
+        mode="highest"
       />
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import { str } from './editor'
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 export default {
   name: "editorVue",
   components: { Editor, Toolbar },
   props: {
-    content: {
-      type: String,
-      default: "",
-    },
+    // content: {
+    //   type: String,
+    //   default: "",
+    // },
     readOnlys: {
       // 只读
       type: Boolean,
@@ -37,6 +41,8 @@ export default {
   },
   data() {
     return {
+      mode: 'highest',
+      content: "",
       editor: null,
       html: "",
       toolbarConfig: {
@@ -78,7 +84,7 @@ export default {
       editorConfig: {
         placeholder: "请输入内容",
         // autoFocus: false,
-        // readOnly: true, // 只读、不可编辑
+        readOnly: false, // 只读、不可编辑
         // 所有的菜单配置，都要在 MENU_CONF 属性下
         MENU_CONF: {
           // 配置上传图片
@@ -93,13 +99,19 @@ export default {
     readOnlys: {
       handler(newV) {
         if (newV) {
-          this.editor.disable(); // 只读模式
+          // this.editor.disable(); // 只读模式
         }
       },
     },
   },
   mounted() {
-
+    // this.content = str
+    setTimeout(() => {
+      const editor = this.$refs.editor;
+      console.log('ceshi', editor)
+      console.log(editor.editor)
+      editor.editor && editor.editor.dangerouslyInsertHtml(str)
+    }, 300)
   },
   methods: {
     uploaadImg(file, insertFn) {
@@ -113,7 +125,8 @@ export default {
     },
   },
   created() {
-    this.html = this.content;
+    // this.html = str;
+    
   },
   beforeDestroy() {
     const editor = this.editor;
