@@ -12,6 +12,8 @@
     "@ckeditor/ckeditor5-build-decoupled-document": "^38.0.1",
     "@ckeditor/ckeditor5-vue2": "^3.0.1",
     "@micro-zoe/micro-app": "^0.8.8",
+    "@packy-tang/vue-tinymce": "^1.1.2",
+    "@tinymce/tinymce-vue": "^3.0.1",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-vue": "^1.0.2",
     "axios": "^0.27.2",
