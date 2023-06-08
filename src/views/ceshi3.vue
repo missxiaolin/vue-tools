@@ -1,10 +1,14 @@
 <template>
   <div class="ue">
     <vue-ueditor-wrap
+      ref="uEditor"
       v-model="data"
       :config="myConfig"
+      :destroy="true"
+      @ready="ready"
       @beforeInit="addCustomButtom"
     ></vue-ueditor-wrap>
+    
   </div>
 </template>
 
@@ -17,9 +21,10 @@ export default {
   },
   data() {
     return {
+      editorInstance: "",
       data: "",
       myConfig: {
-        serverUrl: "http://localhost:8081/controller.php", //图片上传的地址
+        serverUrl: "", //图片上传的地址
         // 相对路径
         UEDITOR_HOME_URL: "/UEditor/",
         // 编辑器不自动被内容撑高
@@ -75,7 +80,7 @@ export default {
             "fontfamily", //字体
             "fontsize", //字号
             "paragraph", //段落格式
-            "simpleupload", //单图上传
+            // "simpleupload", //单图上传
             // "insertimage", //多图上传
             "edittable", //表格属性
             "edittd", //单元格属性
@@ -105,7 +110,7 @@ export default {
             "imagenone", //默认
             "imageleft", //左浮动
             "imageright", //右浮动
-            "attachment", //附件
+            // "attachment", //附件
             "imagecenter", //居中
             "wordimage", //图片转存
             "lineheight", //行间距
@@ -134,56 +139,96 @@ export default {
     };
   },
   methods: {
+    ready(n) {
+      this.editorInstance = n;
+      this.addBtn()
+    },
+    addBtn() {
+      let edui2 = document.getElementById('edui2')
+      let content = `
+        <div id='ueditor-update-file'><img style="margin-top: 4px;" src="https://cdn.enmonster.com/update_20230608.png" width="15" height="15" alt=""></div>
+      `
+      let div = document.createElement("div");
+      div.className = "edui-box edui-splitbutton edui-for-inserttable edui-default"
+      div.innerHTML = content
+      edui2.appendChild(div)
+      let updateBtn = document.getElementById('ueditor-update-file')
+      updateBtn.addEventListener("click", () => {
+        // 这里做自定义上传图片
+        this.editorInstance.execCommand("inserthtml", '<img src="' + 'https://img1.baidu.com/it/u=1960110688,1786190632&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=281' + '"/>');
+      })
+      
+    },
     addCustomButtom(editorId) {
-      var that = this;
-      window.UE.registerUI(
-        "test-button",
-        function (editor, uiName) {
-          // 注册按钮执行时的 command 命令，使用命令默认就会带有回退操作
-          editor.registerCommand(uiName, {
-            execCommand: function () {
-              editor.execCommand("inserthtml", ``);
-            },
-          });
+      console.log(this.editorInstance)
+      // 注册插件
+      window.UE.registerUI("upload-image", function (editor, uiName) {
+        // 创建一个按钮
+        var uploadImageBtn = new window.UE.ui.Button({
+          name: "上传图片",
+          title: "上传图片",
+          cssRules: "background-position: -380px -0px",
+          onclick: function () {
+            // 在这里打开图片上传的对话框
+            // ...
+          },
+        });
 
-          // 创建一个 button
-          var btn = new window.UE.ui.Button({
-            // 按钮的名字
-            name: uiName,
-            // 提示
-            title: "插入文字",
-            // 需要添加的额外样式，可指定 icon 图标，图标路径参考常见问题 2
-            cssRules: "background-position: -380px 0px;",
-            // 点击时执行的命令
-            onclick: function () {
-              // 这里是我自己封装的上传图片功能可以忽略, 重点插入图片 editor.execCommand('inserthtml', '<img src="'+url+'"/>');
-              window.qiniuChange(".ueUpload #pickfiles", function (url) {
-                // console.log(url);
-                editor.execCommand("inserthtml", '<img src="' + url + '"/>');
-                document.getElementById("pickfiles").value = "";
-              });
-              // console.log('自定义button')
-            },
-          });
+        // 点击按钮时触发
+        return uploadImageBtn;
+      });
 
-          // 当点到编辑内容上时，按钮要做的状态反射
-          editor.addListener("selectionchange", function () {
-            // var state = editor.queryCommandState(uiName);
-            // if (state === -1) {
-            //   btn.setDisabled(true);
-            //   btn.setChecked(false);
-            // } else {
-            //   btn.setDisabled(false);
-            //   btn.setChecked(state);
-            // }
-          });
+      // window.UE.registerUI(
+      //   "test-button",
+      //   function (editor, uiName) {
+      //     console.log("测试");
+      //     console.log(uiName);
+      //     // 注册按钮执行时的 command 命令，使用命令默认就会带有回退操作
+      //     editor.registerCommand(uiName, {
+      //       execCommand: function () {
+      //         editor.execCommand("inserthtml", ``);
+      //       },
+      //     });
 
-          // 因为你是添加 button，所以需要返回这个 button
-          return btn;
-        },
-        55 /* 指定添加到工具栏上的哪个位置，默认时追加到最后 */,
-        editorId /* 指定这个 UI 是哪个编辑器实例上的，默认是页面上所有的编辑器都会添加这个按钮 */
-      );
+      //     // 创建一个 button
+      //     let btn = new window.UE.ui.Button({
+      //       // 按钮的名字
+      //       name: uiName,
+      //       // 提示
+      //       title: "上传图片",
+      //       // 需要添加的额外样式，可指定 icon 图标，图标路径参考常见问题 2
+      //       cssRules: "background-position: -380px 0px;",
+      //       // 点击时执行的命令
+      //       onclick: function () {
+      //         alert(11);
+      //         // 这里是我自己封装的上传图片功能可以忽略, 重点插入图片 editor.execCommand('inserthtml', '<img src="'+url+'"/>');
+      //         window.qiniuChange(".ueUpload #pickfiles", function (url) {
+      //           // console.log(url);
+      //           editor.execCommand("inserthtml", '<img src="' + url + '"/>');
+      //           document.getElementById("pickfiles").value = "";
+      //         });
+      //         // console.log('自定义button')
+      //       },
+      //     });
+
+      //     // 当点到编辑内容上时，按钮要做的状态反射
+      //     editor.addListener("selectionchange", function () {
+      //       // var state = editor.queryCommandState(uiName);
+      //       // if (state === -1) {
+      //       //   btn.setDisabled(true);
+      //       //   btn.setChecked(false);
+      //       // } else {
+      //       //   btn.setDisabled(false);
+      //       //   btn.setChecked(state);
+      //       // }
+      //     });
+
+      //     // 因为你是添加 button，所以需要返回这个 button
+      //     return btn;
+      //   }
+      //   // 1 /* 指定添加到工具栏上的哪个位置，默认时追加到最后 */,
+      //   // editorId /* 指定这个 UI 是哪个编辑器实例上的，默认是页面上所有的编辑器都会添加这个按钮 */
+      // );
     },
   },
 };

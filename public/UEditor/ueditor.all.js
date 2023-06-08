@@ -19723,6 +19723,7 @@ UE.plugins["video"] = function() {
           )
         );
       }
+      
       me.execCommand("inserthtml", html.join(""), true);
       var rng = this.selection.getRange();
       for (var i = 0, len = videoObjs.length; i < len; i++) {
