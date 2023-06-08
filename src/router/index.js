@@ -77,6 +77,11 @@ const routes = [
     path: '/ceshi3',
     name: 'ceshi3',
     component: () => import('../views/ceshi3.vue')
+  },
+  {
+    path: '/ceshi4',
+    name: 'ceshi4',
+    component: () => import('../views/ceshi4.vue')
   }
 ]
 
