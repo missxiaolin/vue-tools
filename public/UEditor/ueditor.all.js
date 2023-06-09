@@ -8048,9 +8048,9 @@ var fillCharReg = new RegExp(domUtils.fillChar, "g");
       var me = this;
 
       me.fireEvent("beforesetcontent", html);
-      var root = UE.htmlparser(html);
-      me.filterInputRule(root);
-      html = root.toHtml();
+      // var root = UE.htmlparser(html);
+      // me.filterInputRule(root);
+      // html = root.toHtml();
 
       me.body.innerHTML = (isAppendTo ? me.body.innerHTML : "") + html;
 
@@ -19548,19 +19548,44 @@ UE.plugins["video"] = function() {
           '" />';
         break;
       case "embed":
-        str =
-          '<embed type="application/x-shockwave-flash" class="' +
-          classname +
-          '" pluginspage="http://www.macromedia.com/go/getflashplayer"' +
-          ' src="' +
-          utils.html(url) +
-          '" width="' +
-          width +
-          '" height="' +
-          height +
-          '"' +
-          (align ? ' style="float:' + align + '"' : "") +
-          ' wmode="transparent" play="true" loop="false" menu="false" allowscriptaccess="never" allowfullscreen="true" >';
+        // str =
+        //   '<embed type="application/x-shockwave-flash" class="' +
+        //   classname +
+        //   '" pluginspage="http://www.macromedia.com/go/getflashplayer"' +
+        //   ' src="' +
+        //   utils.html(url) +
+        //   '" width="' +
+        //   width +
+        //   '" height="' +
+        //   height +
+        //   '"' +
+        //   (align ? ' style="float:' + align + '"' : "") +
+        //   ' wmode="transparent" play="true" loop="false" menu="false" allowscriptaccess="never" allowfullscreen="true" >';
+          // str = '<embed src="' +  utils.html(url) + '" width="' + width  + '" height="' + height  + '"'  + (align ? ' style="float:' + align + '"': '') +
+          //           ' wmode="transparent" play="true" loop="false" menu="false" allowscriptaccess="never" allowfullscreen="true" >';
+
+          var ext = url.substr(url.lastIndexOf(".") + 1);
+          if (ext == "ogv") ext = "ogg";
+          str =
+            "<video" +
+            (id ? ' id="' + id + '"' : "") +
+            ' class="' +
+            classname +
+            ' video-js" ' +
+            (align ? ' style="float:' + align + '"' : "") +
+            ' controls preload="none" width="' +
+            width +
+            '" height="' +
+            height +
+            '" src="' +
+            url +
+            '" data-setup="{}">' +
+            '<source src="' +
+            url +
+            '" type="video/' +
+            ext +
+            '" /></video>';
+                  break;
         break;
       case "video":
         var ext = url.substr(url.lastIndexOf(".") + 1);
@@ -19711,17 +19736,18 @@ UE.plugins["video"] = function() {
         cl = type == "upload"
           ? "edui-upload-video video-js vjs-default-skin"
           : "edui-faked-video";
-        html.push(
-          creatInsertStr(
-            vi.url,
-            vi.width || 420,
-            vi.height || 280,
-            id + i,
-            null,
-            cl,
-            "image"
-          )
-        );
+        // html.push(
+        //   creatInsertStr(
+        //     vi.url,
+        //     vi.width || 420,
+        //     vi.height || 280,
+        //     id + i,
+        //     null,
+        //     cl,
+        //     "image"
+        //   )
+        // );
+        html.push(creatInsertStr( vi.url, vi.width || 420,  vi.height || 280, id + i, null, cl, 'video'));
       }
       
       me.execCommand("inserthtml", html.join(""), true);
