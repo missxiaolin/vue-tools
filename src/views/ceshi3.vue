@@ -2,13 +2,13 @@
   <div class="ue">
     <vue-ueditor-wrap
       ref="uEditor"
-      v-model="data"
+      v-model="dataHtml"
       :config="myConfig"
       :destroy="true"
       @ready="ready"
       @beforeInit="addCustomButtom"
     ></vue-ueditor-wrap>
-    
+    <div @click="getHtml">拿到文本</div>
   </div>
 </template>
 
@@ -22,7 +22,7 @@ export default {
   data() {
     return {
       editorInstance: "",
-      data: "",
+      dataHtml: str,
       myConfig: {
         serverUrl: "", //图片上传的地址
         // 相对路径
@@ -143,6 +143,9 @@ export default {
       this.editorInstance = n;
       this.addBtn()
     },
+    getHtml() {
+      console.log(this.dataHtml)
+    },
     addBtn() {
       let edui2 = document.getElementById('edui2')
       let content = `
@@ -150,6 +153,7 @@ export default {
       `
       let div = document.createElement("div");
       div.className = "edui-box edui-splitbutton edui-for-inserttable edui-default"
+      div.id = 'edui300'
       div.innerHTML = content
       edui2.appendChild(div)
       let updateBtn = document.getElementById('ueditor-update-file')
