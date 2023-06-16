@@ -180,6 +180,8 @@ export default {
         // https://www.tiny.cloud/docs-3x/reference/configuration/Configuration3x@convert_urls/
         // https://stackoverflow.com/questions/5196205/disable-tinymce-absolute-to-relative-url-conversions
         convert_urls: false,
+        images_upload_url: '/demo/upimg.php',
+        images_upload_base_path: '/demo',
         // 整合七牛上传
         // images_dataimg_filter(img) {
         //   setTimeout(() => {
