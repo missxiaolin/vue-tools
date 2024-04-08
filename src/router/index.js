@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import gsap from './gsap'
 
 Vue.use(VueRouter)
 
@@ -10,16 +11,7 @@ const routes = [
     name: 'home',
     component: HomeView
   },
-  {
-    path: '/gsap',
-    name: 'gsap',
-    component: () => import(/* webpackChunkName: "gsap" */ '../views/gsap/index.vue')
-  },
-  {
-    path: '/gsap/scale/phone/scroll',
-    name: 'gsapScalePhoneScroll',
-    component: () => import(/* webpackChunkName: "gsapScalePhoneScroll" */ '../views/gsap/vivo-scroll-switch-phone-color/scale-phone-to-middle-when-scroll.vue')
-  },
+  ...gsap,
   {
     path: '/shopping',
     name: 'Shopping',
