@@ -193,8 +193,7 @@
 export default {
   mounted() {
     const windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-    console.log()
-    document.body.style.height = windowHeight * 5 + document.querySelector('.comp-inner').scrollHeight + 400 + "px";
+    document.body.style.height = windowHeight * 5 + 117 + 471 + "px";
 
     // section-5
     const bgEl = document.querySelector(".bg");
