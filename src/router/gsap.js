@@ -14,5 +14,10 @@ export default [
   }, {
     path: "/gsap/canvas/animation",
     name: "canvasAnimation",
-    component: () => import("../views/gsap/macbook-pro-animation/canvas-animation.vue"),}
+    component: () => import("../views/gsap/macbook-pro-animation/canvas-animation.vue"),
+  }, {
+    path: "/gsap/mars/section5",
+    name: "marsSection5",
+    component: () => import("../views/gsap/mars/section-5-6.vue"),
+  }
 ];

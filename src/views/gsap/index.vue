@@ -9,6 +9,8 @@
     <nav>
       <router-link to="/gsap/canvas/animation">switch-phone-color-when-scroll</router-link> 
     </nav>
+    <p>OPPO Find X3 火星版官网：使用 GSAP 和 clip-path 实现 5 种场景切换动效</p>
+    <router-link to="/gsap/mars/section5">mouse animation + gasp scene switch</router-link>
   </div>
 </template>
 
