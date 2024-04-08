@@ -11,6 +11,11 @@ const routes = [
     component: HomeView
   },
   {
+    path: '/gsap',
+    name: 'gsap',
+    component: () => import(/* webpackChunkName: "gsap" */ '../views/gsap/index.vue')
+  },
+  {
     path: '/shopping',
     name: 'Shopping',
     // route level code-splitting
