@@ -7,13 +7,13 @@ export default {
   name: "app",
   mounted() {
     this.$nextTick(() => {
-      let link = document.createElement("link");
-      link.type = "text/css";
-      link.id = "theme";
-      link.rel = "stylesheet";
-      link.href = "./theme_red.css";
-      console.log(link);
-      document.getElementsByTagName("head")[0].appendChild(link);
+      // let link = document.createElement("link");
+      // link.type = "text/css";
+      // link.id = "theme";
+      // link.rel = "stylesheet";
+      // link.href = "./theme_red.css";
+      // console.log(link);
+      // document.getElementsByTagName("head")[0].appendChild(link);
 
       // document.getElementById('app').setAttribute('class', 'theme_red');
     });
