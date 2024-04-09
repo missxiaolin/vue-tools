@@ -19,5 +19,9 @@ export default [
     path: "/gsap/mars/section5",
     name: "marsSection5",
     component: () => import("../views/gsap/mars/section-5-6.vue"),
+  }, {
+    path: "/gsap/mars/section3",
+    name: "marsSection3",
+    component: () => import("../views/gsap/mars/section-3.vue"),
   }
 ];
