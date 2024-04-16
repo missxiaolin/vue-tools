@@ -23,5 +23,9 @@ export default [
     path: "/gsap/mars/section3",
     name: "marsSection3",
     component: () => import("../views/gsap/mars/section-3.vue"),
+  }, {
+    path: "/gsap/iphone14/index",
+    name: "iphone14",
+    component: () => import("../views/gsap/iphone14/index.vue"),
   }
 ];
