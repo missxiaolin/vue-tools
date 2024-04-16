@@ -27,5 +27,9 @@ export default [
     path: "/gsap/iphone14/index",
     name: "iphone14",
     component: () => import("../views/gsap/iphone14/index.vue"),
+  }, {
+    path: "/gsap/video/index",
+    name: "iphone14",
+    component: () => import("../views/gsap/video/index.vue"),
   }
 ];

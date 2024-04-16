@@ -14,6 +14,8 @@
     <router-link to="/gsap/mars/section3">three.js star + gsap clip-path</router-link>
     <p>苹果14效果</p>
     <router-link to="/gsap/iphone14/index">苹果14效果</router-link>
+    <p>video 效果</p>
+    <router-link to="/gsap/video/index">video</router-link>
   </div>
 </template>
 
