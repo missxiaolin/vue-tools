@@ -1,3 +1,7 @@
+## 中文文档
+
+https://gsap.framer.wiki/stated
+
 ### 基础动画
 
 ~~~
