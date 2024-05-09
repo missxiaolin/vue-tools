@@ -89,6 +89,11 @@ const routes = [
     path: '/ceshi5',
     name: 'ceshi5',
     component: () => import('../views/ceshi5.vue')
+  },
+  {
+    path: '/vue/rule',
+    name: 'vueRule',
+    component: () => import('../views/rule/index.vue')
   }
 ]
 
